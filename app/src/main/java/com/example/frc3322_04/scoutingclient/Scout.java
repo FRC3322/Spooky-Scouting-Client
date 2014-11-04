@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.example.frc3322_04.scoutingclient.FormWidget;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
 
 public class Scout extends Activity {
 
     ScrollView scrollView;
+    ArrayList<FormWidget> widgets;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,41 +33,46 @@ public class Scout extends Activity {
         scrollView = (ScrollView)findViewById(R.id.scouting_scroll);
         LinearLayout linearLayout = new LinearLayout(scrollView.getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+        widgets = new ArrayList<FormWidget>();
         String[] opts = {"red","blue"};
-        linearLayout.addView(new TextBox(linearLayout.getContext(),"Sample",null),0);
-        linearLayout.addView(new OptionPicker(linearLayout.getContext(),"Choose",opts),1);
-        for(int i = 2; i < 7; i++) {
-            linearLayout.addView(new NumberBox(linearLayout.getContext(), "Num " + String.valueOf(i), i, false, true, 1110, 0), i);
+        widgets.add(new TextBox(linearLayout.getContext(),"Sample",null));
+        widgets.add(new OptionPicker(linearLayout.getContext(),"Choose",opts));
+        for(int i = 0; i < 10; i++) {
+            widgets.add(new NumberBox(linearLayout.getContext(), "Num " + String.valueOf(i), i, false, true, 1110, 0));
+        }
+        for(FormWidget i: widgets) {
+            linearLayout.addView(i);
         }
         scrollView.addView(linearLayout);
     }
-    private class TextBox extends LinearLayout {
-        TextView label;     //Refactor label into superclass???
+    public void getValue(View view) {
+        for(FormWidget i: widgets) {
+            Log.i("AOUT",i.getValue().toString());
+        }
+    }
+    private class TextBox extends FormWidget{
         EditText textBox;
         TextBox(Context context, String labelText, String initialValue) {
-            super(context);
-            label = new TextView(context);
-            label.setText(labelText);
+            super(context, labelText);
             textBox = new EditText(context);
             if(initialValue != null) {
                 textBox.setText(initialValue);
             }
-            this.addView(label);
             this.addView(textBox);
         }
+        @Override
         public String getValue() {
             return textBox.getText().toString();
         }
     }
-    private class NumberBox extends LinearLayout {
+    private class NumberBox extends FormWidget {
         //TODO make sure all the validation works
-        TextView label;     //Refactor label into superclass???
         EditText textBox;
         Button inc, decr;
         int max, min;
         final boolean hMax, hMin;
         NumberBox(Context context, String labelText, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum) {
-            super(context);
+            super(context, labelText);
             hMax = hasMax;
             hMin = hasMin;
             max = maximum;
@@ -79,8 +89,6 @@ public class Scout extends Activity {
                 //log error
                 initialValue = max;
             }
-            label = new TextView(context);
-            label.setText(labelText);
             textBox = new EditText(context);
             textBox.setText(String.valueOf(initialValue));
             DigitsKeyListener dkl = new DigitsKeyListener(min < 0, false);
@@ -119,17 +127,16 @@ public class Scout extends Activity {
                 @Override
                 public void onClick(View view) {
                     int old = getValue();
-                    if(!hMin || old > min) {
+                    if (!hMin || old > min) {
                         textBox.setText(String.valueOf(old - 1));
                     }
                 }
             });
-            this.addView(label);
             this.addView(textBox);
             this.addView(inc);
             this.addView(decr);
         }
-        public int getValue() {
+        public Integer getValue() {
             int ret = 0;
             try {
                 ret = Integer.parseInt(textBox.getText().toString());
@@ -137,21 +144,18 @@ public class Scout extends Activity {
             return ret;
         }
     }
-    private class OptionPicker extends LinearLayout{
-        TextView label;     //Refactor label into superclass???
+    private class OptionPicker extends FormWidget{
         Spinner spinner;
         ArrayAdapter<String> arrayAdapter;
         OptionPicker(Context context, String labelText, String[] opts) {
-            super(context);
-            label = new TextView(context);
-            label.setText(labelText);
+            super(context,labelText);
             spinner = new Spinner(context);
             arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, opts);
             spinner.setAdapter(arrayAdapter);
-            this.addView(label);
             this.addView(spinner);
         }
-        String getValue() {
+        @Override
+        public String getValue() {
             return spinner.getSelectedItem().toString();
         }
     }
