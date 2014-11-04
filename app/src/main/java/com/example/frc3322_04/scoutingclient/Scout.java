@@ -26,11 +26,15 @@ public class Scout extends Activity {
 
     ScrollView scrollView;
     ArrayList<FormWidget> widgets;
+    ArrayList<LinearLayout> pages;
+    int currentPage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scout);
+        pages = new ArrayList<LinearLayout>();
         scrollView = (ScrollView)findViewById(R.id.scouting_scroll);
+        Log.i("AOUT",scrollView.getContext().toString());
         LinearLayout linearLayout = new LinearLayout(scrollView.getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         widgets = new ArrayList<FormWidget>();
@@ -43,11 +47,31 @@ public class Scout extends Activity {
         for(FormWidget i: widgets) {
             linearLayout.addView(i);
         }
-        scrollView.addView(linearLayout);
+        pages.add(linearLayout);
+        pages.add(new LinearLayout(scrollView.getContext()));
+        pages.get(1).setOrientation(LinearLayout.VERTICAL);
+        pages.get(1).addView(new TextBox(pages.get(1).getContext(),"Sample","default"));
+        scrollView.addView(pages.get(0));
+        currentPage = 0;
     }
     public void getValue(View view) {
         for(FormWidget i: widgets) {
             Log.i("AOUT",i.getValue().toString());
+        }
+    }
+    public void next(View view) {
+        if(currentPage < pages.size() - 1) {
+            scrollView.removeAllViews();
+            currentPage++;
+            scrollView.addView(pages.get(currentPage));
+        }
+        getValue(view);
+    }
+    public void back(View view) {
+        if(currentPage > 0) {
+            scrollView.removeAllViews();
+            currentPage--;
+            scrollView.addView(pages.get(currentPage));
         }
     }
     private class TextBox extends FormWidget{
