@@ -1,7 +1,9 @@
 package com.example.frc3322_04.scoutingclient;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,6 +55,7 @@ public class Scout extends Activity {
         pages.get(1).addView(new TextBox(pages.get(1).getContext(),"Sample","default"));
         scrollView.addView(pages.get(0));
         currentPage = 0;
+
     }
     public void getValue(View view) {
         for(FormWidget i: widgets) {
