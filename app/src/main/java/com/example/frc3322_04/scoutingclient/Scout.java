@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.example.frc3322_04.scoutingclient.FormWidget;
+import com.example.frc3322_04.scoutingclient.*;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -28,12 +28,16 @@ public class Scout extends Activity {
     ArrayList<FormWidget> widgets;
     ArrayList<LinearLayout> pages;
     int currentPage;
+    Button back;
+    Button next;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scout);
         pages = new ArrayList<LinearLayout>();
         scrollView = (ScrollView)findViewById(R.id.scouting_scroll);
+        back = (Button)findViewById(R.id.back_button);
+        next = (Button)findViewById(R.id.next_button);
         Log.i("AOUT",scrollView.getContext().toString());
         LinearLayout linearLayout = new LinearLayout(scrollView.getContext());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -53,6 +57,18 @@ public class Scout extends Activity {
         pages.get(1).addView(new TextBox(pages.get(1).getContext(),"Sample","default"));
         scrollView.addView(pages.get(0));
         currentPage = 0;
+    }
+    private void fixLabels() {
+        if(currentPage == 0) {
+            back.setVisibility(View.INVISIBLE);
+        } else {
+            back.setVisibility(View.VISIBLE);
+        }
+        if(currentPage >= pages.size() - 1) {
+            next.setVisibility(View.INVISIBLE);
+        } else {
+            next.setVisibility(View.VISIBLE);
+        }
     }
     public void getValue(View view) {
         for(FormWidget i: widgets) {
@@ -74,116 +90,6 @@ public class Scout extends Activity {
             scrollView.addView(pages.get(currentPage));
         }
     }
-    private class TextBox extends FormWidget{
-        EditText textBox;
-        TextBox(Context context, String labelText, String initialValue) {
-            super(context, labelText);
-            textBox = new EditText(context);
-            if(initialValue != null) {
-                textBox.setText(initialValue);
-            }
-            this.addView(textBox);
-        }
-        @Override
-        public String getValue() {
-            return textBox.getText().toString();
-        }
-    }
-    private class NumberBox extends FormWidget {
-        //TODO make sure all the validation works
-        EditText textBox;
-        Button inc, decr;
-        int max, min;
-        final boolean hMax, hMin;
-        NumberBox(Context context, String labelText, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum) {
-            super(context, labelText);
-            hMax = hasMax;
-            hMin = hasMin;
-            max = maximum;
-            min = minimum;
-            if(hMax && hMin && max < min) {//dont bother validating min <= max if neither matter
-                int temp = max;
-                max = min;
-                min = temp;
-            }
-            if(hMin && initialValue < min) {
-                //log error
-                initialValue = min;
-            }else if(hMax && initialValue > max) {
-                //log error
-                initialValue = max;
-            }
-            textBox = new EditText(context);
-            textBox.setText(String.valueOf(initialValue));
-            DigitsKeyListener dkl = new DigitsKeyListener(min < 0, false);
-            textBox.setKeyListener(dkl);
-            textBox.addTextChangedListener(new TextWatcher() {//make sure max and min rules are enforced
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                }
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if(hMax && getValue() > max) {
-                        textBox.setText(String.valueOf(max));
-                    } else if(hMin && getValue() < min) {
-                        textBox.setText(String.valueOf(min));
-                    }
-                }
-            });
-            inc = new Button(context);
-            inc.setText("+");
-            inc.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int old = getValue();
-                    if (!hMax || old < max) {
-                        textBox.setText(String.valueOf(old+1));
-                    }
-                }
-            });
-            decr = new Button(context);
-            decr.setText("-");
-            decr.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int old = getValue();
-                    if (!hMin || old > min) {
-                        textBox.setText(String.valueOf(old - 1));
-                    }
-                }
-            });
-            this.addView(textBox);
-            this.addView(inc);
-            this.addView(decr);
-        }
-        public Integer getValue() {
-            int ret = 0;
-            try {
-                ret = Integer.parseInt(textBox.getText().toString());
-            } catch (NumberFormatException e){}
-            return ret;
-        }
-    }
-    private class OptionPicker extends FormWidget{
-        Spinner spinner;
-        ArrayAdapter<String> arrayAdapter;
-        OptionPicker(Context context, String labelText, String[] opts) {
-            super(context,labelText);
-            spinner = new Spinner(context);
-            arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, opts);
-            spinner.setAdapter(arrayAdapter);
-            this.addView(spinner);
-        }
-        @Override
-        public String getValue() {
-            return spinner.getSelectedItem().toString();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
