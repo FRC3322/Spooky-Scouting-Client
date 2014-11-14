@@ -1,5 +1,6 @@
 package com.example.frc3322_04.scoutingclient;
 
+import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,11 +15,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import java.util.UUID;
 
-public class BluetoothService extends Service {
+public class BluetoothService {
     private BluetoothManager m_BluetoothManager;
     private BluetoothAdapter m_BluetoothAdapter;
     private BluetoothGatt m_BluetoothGatt;
@@ -44,8 +46,10 @@ public class BluetoothService extends Service {
     public final static String CHARACTERISTIC = "org.skylinerobotics.CHARACTERISTIC";
     public final static String VALUE = "org.skylinerobotics.VALUE";
     public final static String TIME = "org.skylinerobotics.TIME";
-
-
+    public final Activity activity;
+    public BluetoothService(Activity activity){
+        this.activity = activity;
+    }
     private final BluetoothGattCallback m_GattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -148,7 +152,7 @@ public class BluetoothService extends Service {
                 intent.putExtra(VALUE, values);
             }
 
-          //  LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+           // LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
@@ -159,7 +163,7 @@ public class BluetoothService extends Service {
     }
 
     private final IBinder mBinder = new LocalBinder();
-
+/*
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -170,10 +174,10 @@ public class BluetoothService extends Service {
         disconnect();
         return super.onUnbind(intent);
     }
-
+*/
     public boolean initialize() {
         if (m_BluetoothManager == null) {
-            m_BluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            m_BluetoothManager = (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
             if (m_BluetoothManager == null) {
                 return false;
             }
@@ -211,7 +215,7 @@ public class BluetoothService extends Service {
     }
 
     public boolean connect(final BluetoothDevice device) {
-        m_BluetoothGatt = device.connectGatt(this, false, m_GattCallback);
+        m_BluetoothGatt = device.connectGatt(activity, false, m_GattCallback);
         return true;
     }
 
