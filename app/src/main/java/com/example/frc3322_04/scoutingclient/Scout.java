@@ -54,7 +54,8 @@ public class Scout extends Activity {
         pages.add(linearLayout);
         pages.add(new LinearLayout(scrollView.getContext()));
         pages.get(1).setOrientation(LinearLayout.VERTICAL);
-        pages.get(1).addView(new TextBox(pages.get(1).getContext(),"Sample","default"));
+        pages.get(1).addView(new TextBox(pages.get(1).getContext(), "Sample", "default"));
+        pages.get(1).addView(new MapCordinatePicker(pages.get(1).getContext()));
         scrollView.addView(pages.get(0));
         currentPage = 0;
     }
