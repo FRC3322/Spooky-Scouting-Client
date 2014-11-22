@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class MapCordinatePicker extends FormWidget {
+    //TODO sometimes part of hte image gets cut off
     ImageView map;
     double x;
     double y;
