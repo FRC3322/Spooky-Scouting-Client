@@ -19,8 +19,7 @@ public class MapCordinatePicker extends FormWidget {
     MapCordinatePicker(Context context) {
         super(context,"Tap to specify the location of the robot");
         x = y = -1.0;
-        this.setBackgroundColor(Color.BLUE);
-        //this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        this.setOrientation(VERTICAL);
         map = new ImageView(context) {
             @Override
             protected void onDraw(Canvas canvas) {
@@ -33,8 +32,8 @@ public class MapCordinatePicker extends FormWidget {
                 }
             }
         };
-        map.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        map.setScaleType(ImageView.ScaleType.FIT_XY);
+        map.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        map.setAdjustViewBounds(true);
         map.setOnTouchListener(new OnTouchListener(){
             @Override
             public boolean onTouch(View view, MotionEvent event) {
