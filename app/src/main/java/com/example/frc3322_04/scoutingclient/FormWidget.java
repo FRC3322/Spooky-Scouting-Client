@@ -19,4 +19,7 @@ public class FormWidget extends LinearLayout {
     public Object getValue() {
         return null;
     }
+    public boolean isFilled() {
+        return true;
+    }
 }

@@ -18,4 +18,8 @@ class TextBox extends FormWidget{
     public String getValue() {
         return textBox.getText().toString();
     }
+    @Override
+    public boolean isFilled() {
+        return textBox.getText().toString() != "";
+    }
 }

@@ -3,6 +3,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,16 +17,30 @@ public class MapCordinatePicker extends FormWidget {
     double x;
     double y;
     MapCordinatePicker(Context context) {
-        super(context);
+        super(context,"Tap to specify the location of the robot");
         x = y = -1.0;
         this.setBackgroundColor(Color.BLUE);
-        this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        map = new ImageView(context);
+        //this.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        map = new ImageView(context) {
+            @Override
+            protected void onDraw(Canvas canvas) {
+                super.onDraw(canvas);
+                Paint paint = new Paint();
+                paint.setColor(Color.RED);
+                paint.setStrokeWidth(2);
+                if(x >= 0 && x < 1 && y >=0 && y < 1) {
+                    canvas.drawCircle((float) x * this.getWidth(), (float) y * this.getHeight(),10, paint);
+                }
+            }
+        };
+        map.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        map.setScaleType(ImageView.ScaleType.FIT_XY);
         map.setOnTouchListener(new OnTouchListener(){
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 x = event.getX() / view.getWidth();
                 y = event.getY() / view.getHeight();
+                invalidate();
                 Log.i("AOUT", "Coordinates: " + String.valueOf(x) + ", " + String.valueOf(y));
                 return true;
             }
@@ -38,5 +53,9 @@ public class MapCordinatePicker extends FormWidget {
     @Override
     public Tuple<Double,Double> getValue() {
         return new Tuple<Double, Double>(x,y);
+    }
+    @Override
+    public boolean isFilled() {
+        return x >=0.0 && y >= 0.0;
     }
 }
