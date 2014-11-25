@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class BluetoothService {
     public static UUID CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static UUID NOTIFIABLE_GROUP_VALUES_UUID = UUID.fromString("5957BE8F-C01F-4531-A529-0924398E4FE9");
     private static UUID NOTIFIABLE_GROUP_UUID = UUID.fromString("B4A265CD-2786-432D-8E92-819B9113AA10");
+    public static UUID MASSAGE_LEVEL_UUID = UUID.fromString("25bfe8a4-786d-458d-a4ad-f710d4e7efc6");
 
 
     private BluetoothGattCharacteristic m_NotifiableGroupValues;
@@ -46,22 +48,21 @@ public class BluetoothService {
     public final static String CHARACTERISTIC = "org.skylinerobotics.CHARACTERISTIC";
     public final static String VALUE = "org.skylinerobotics.VALUE";
     public final static String TIME = "org.skylinerobotics.TIME";
-    public final Activity activity;
-    public BluetoothService(Activity activity){
+    public final Main activity;
+    public BluetoothService(Main activity){
         this.activity = activity;
     }
     private final BluetoothGattCallback m_GattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
+            Log.d("Spooky","Connected to a device");
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 m_BluetoothGatt.discoverServices();
-                broadcastUpdate(intentAction);
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
-                broadcastUpdate(intentAction);
             }
         }
 
@@ -70,11 +71,18 @@ public class BluetoothService {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 for (BluetoothGattService service : m_BluetoothGatt.getServices()) {
                     for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                        Log.d("SPOOKY", String.format("found UUID %s", characteristic.getUuid().toString()));
                         if (NOTIFIABLE_GROUP_VALUES_UUID.equals(characteristic.getUuid())) {
                             m_NotifiableGroupValues = characteristic;
                         }
                         else if (NOTIFIABLE_GROUP_UUID.equals(characteristic.getUuid())) {
                             m_NotifiableGroup = characteristic;
+                            Log.d("Spooky","found things");
+                            m_NotifiableGroup.setValue("hi");
+                            m_BluetoothGatt.writeCharacteristic(m_NotifiableGroup);
+                        }
+                        if(MASSAGE_LEVEL_UUID.equals(characteristic.getUuid())){
+                            Log.d("SPOOKY", "FOUND THE MASSAGE");
                         }
                     }
                 }
@@ -84,7 +92,6 @@ public class BluetoothService {
                     m_ServicesDiscoveredDelayed = true;
                 }
                 else {
-                    broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
                 }
             }
         }
@@ -92,7 +99,6 @@ public class BluetoothService {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
         }
 
@@ -111,14 +117,12 @@ public class BluetoothService {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             if (m_ServicesDiscoveredDelayed) {
                 m_ServicesDiscoveredDelayed = false;
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             }
         }
     };
@@ -195,12 +199,14 @@ public class BluetoothService {
 
     public void startDiscovery() {
         if (m_BluetoothAdapter.isEnabled()) {
-            stopDiscovery();
             m_DiscoveryCallback = new BluetoothAdapter.LeScanCallback() {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                    broadcastUpdate(ACTION_DEVICE_DISCOVERED, device);
-                    System.out.println("Yay"+DEVICE);
+                    Log.d("Spooky",String.format("Scan found %s,",device.getName()));
+                    if("BioFit-D".equals(device.getName())){
+                        m_BluetoothGatt = device.connectGatt(activity,false, m_GattCallback);
+                        stopDiscovery();
+                    }
                 }
             };
             m_BluetoothAdapter.startLeScan(m_DiscoveryCallback);
