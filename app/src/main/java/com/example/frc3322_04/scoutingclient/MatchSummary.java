@@ -5,19 +5,34 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 
 public class MatchSummary extends Activity {
-
+    ListView listView;
+    ArrayAdapter<String> arrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_summary);
         ArrayList<Tuple<String, Serializable> > values = (ArrayList<Tuple<String, Serializable> >)getIntent().getSerializableExtra("FORM_CONTENTS");
+        listView = (ListView)findViewById(R.id.match_summary);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        listView.setAdapter(arrayAdapter);
         Log.i("AOUT", values.toString());
+        for(Tuple<String, Serializable> i: values) {
+            arrayAdapter.add(i.x + ": " + i.y.toString());
+            arrayAdapter.add(i.x + ": " + i.y.toString());
+            arrayAdapter.add(i.x + ": " + i.y.toString());
+            arrayAdapter.add(i.x + ": " + i.y.toString());
+            arrayAdapter.add(i.x + ": " + i.y.toString());
+//            listView.addView(label);
+        }
     }
 
 
