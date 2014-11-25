@@ -20,6 +20,10 @@
             android:name=".Scout"
             android:label="@string/title_activity_scout" >
         </activity>
+        <activity
+            android:name=".MatchSummary"
+            android:label="@string/title_activity_match_summary" >
+        </activity>
     </application>
 
 </manifest>

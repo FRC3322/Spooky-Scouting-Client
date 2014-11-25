@@ -8,8 +8,8 @@ import com.example.frc3322_04.scoutingclient.FormWidget;
 class OptionPicker extends FormWidget{
     Spinner spinner;
     ArrayAdapter<String> arrayAdapter;
-    OptionPicker(Context context, String labelText, String[] opts) {
-        super(context,labelText);
+    OptionPicker(Context context, String labelText, String keyValue, String[] opts) {
+        super(context,labelText, keyValue);
         spinner = new Spinner(context);
         arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, opts);
         spinner.setAdapter(arrayAdapter);

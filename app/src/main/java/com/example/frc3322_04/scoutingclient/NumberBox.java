@@ -15,8 +15,8 @@ class NumberBox extends FormWidget {
     Button inc, decr;
     int max, min;
     final boolean hMax, hMin;
-    NumberBox(Context context, String labelText, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum) {
-        super(context, labelText);
+    NumberBox(Context context, String labelText, String keyValue, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum) {
+        super(context, labelText, keyValue);
         hMax = hasMax;
         hMin = hasMin;
         max = maximum;

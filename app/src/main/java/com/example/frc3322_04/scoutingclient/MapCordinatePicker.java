@@ -17,8 +17,8 @@ public class MapCordinatePicker extends FormWidget {
     ImageView map;
     double x;
     double y;
-    MapCordinatePicker(Context context) {
-        super(context,"Tap to specify the location of the robot");
+    MapCordinatePicker(Context context,String keyValue) {
+        super(context,"Tap to specify the location of the robot",keyValue);
         x = y = -1.0;
         this.setOrientation(VERTICAL);
         map = new ImageView(context) {
@@ -40,12 +40,11 @@ public class MapCordinatePicker extends FormWidget {
             public boolean onTouch(View view, MotionEvent event) {
                 x = event.getX() / view.getWidth();
                 y = event.getY() / view.getHeight();
-                invalidate();
+                map.invalidate();
                 Log.i("AOUT", "Coordinates: " + String.valueOf(x) + ", " + String.valueOf(y));
                 return true;
             }
         });
-        //map.setOnTouchListener(new View.OnTouchListener());
         map.setImageResource(R.drawable.map);
         map.setScaleType(ImageView.ScaleType.FIT_XY);
         this.addView(map);

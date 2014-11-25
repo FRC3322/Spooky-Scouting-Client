@@ -2,6 +2,7 @@ package com.example.frc3322_04.scoutingclient;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.frc3322_04.scoutingclient.*;
 
+import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.ArrayList;
 
@@ -40,16 +42,16 @@ public class Scout extends Activity {
         next = (Button)findViewById(R.id.next_button);
         formPages = new ArrayList<FormPage>();
         FormPage p1 = new FormPage(scrollView.getContext());
-        p1.add(new TextBox(p1.getContext(),"test","default"));
-        p1.add(new TextBox(p1.getContext(),"test",null));
-        p1.add(new NumberBox(p1.getContext(),"Num",0,true,true,100, 0));
-        p1.add(new MapCordinatePicker(p1.getContext()));
+        p1.add(new TextBox(p1.getContext(),"test","Text1","default"));
+        p1.add(new TextBox(p1.getContext(),"test","Text2",null));
+        p1.add(new NumberBox(p1.getContext(),"Num","Num1",0,true,true,100, 0));
+        p1.add(new MapCordinatePicker(p1.getContext(),"Map"));
         formPages.add(p1);
         FormPage p2 = new FormPage(scrollView.getContext());
-        p2.add(new TextBox(p2.getContext(),"page 2","default"));
-        p2.add(new NumberBox(p2.getContext(),"Num",0,true,true,100, 0));
+        p2.add(new TextBox(p2.getContext(),"page 2","Text3","default"));
+        p2.add(new NumberBox(p2.getContext(),"Num","Num2",0,true,true,100, 0));
         String[] opts = {"red","blue"};
-        p2.add(new OptionPicker(p2.getContext(),"Choose",opts));
+        p2.add(new OptionPicker(p2.getContext(),"Choose","Optpick",opts));
         formPages.add(p2);
         if(formPages.size() > 0)
             scrollView.addView(formPages.get(0));
@@ -63,20 +65,36 @@ public class Scout extends Activity {
             back.setVisibility(View.VISIBLE);
         }
         if(currentPage >= formPages.size() - 1) {
-            next.setVisibility(View.INVISIBLE);
+            next.setText("Submit");
         } else {
-            next.setVisibility(View.VISIBLE);
+            next.setText("Next");
         }
     }
     public void getValues() {
         formPages.get(currentPage).getValues();
     }
     public void next(View view) {
-        getValues();
         if(currentPage < formPages.size() - 1) {
             scrollView.removeAllViews();
             currentPage++;
             scrollView.addView(formPages.get(currentPage));
+        } else {
+            ArrayList<Tuple<String, Serializable> > values = new ArrayList<Tuple<String, Serializable> >();
+            boolean isFilled = true;
+            for(FormPage page : formPages) {
+                if(!page.isFilled()) {
+                    isFilled = false;
+                    break;
+                }
+                values.addAll(page.getValues());
+            }
+            if(isFilled) {
+                Intent intent = new Intent(getBaseContext(), MatchSummary.class);
+                intent.putExtra("FORM_CONTENTS", values);
+                startActivity(intent);
+            } else {
+                Log.i("AOUT","NOT FILLED IN");
+            }
         }
         fixLabels();
     }

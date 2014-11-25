@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class FormPage extends LinearLayout{
@@ -27,13 +28,17 @@ public class FormPage extends LinearLayout{
         }
         return true;
     }
-    public void getValues(){
+    public ArrayList<Tuple<String,Serializable> > getValues(){
+        ArrayList<Tuple<String,Serializable> > values = new ArrayList<Tuple<String,Serializable> >();
         if(isFilled()) {
             for(FormWidget i: widgets) {
                 Log.i("AOUT",i.getValue().toString());
+                values.add(new Tuple<String,Serializable>(i.key,i.getValue()));
             }
+            return values;
         } else {
             Log.i("AOUT","Form is not filled out");
+            return null;
         }
     }
 }
