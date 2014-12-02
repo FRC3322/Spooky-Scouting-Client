@@ -4,9 +4,15 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
 import com.example.frc3322_04.scoutingclient.*;
 
 class NumberBox extends FormWidget {
@@ -45,11 +51,12 @@ class NumberBox extends FormWidget {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
-                if(hMax && getValue() > max) {
+                if (hMax && getValue() > max) {
                     textBox.setText(String.valueOf(max));
-                } else if(hMin && getValue() < min) {
+                } else if (hMin && getValue() < min) {
                     textBox.setText(String.valueOf(min));
                 }
             }
@@ -61,7 +68,7 @@ class NumberBox extends FormWidget {
             public void onClick(View view) {
                 int old = getValue();
                 if (!hMax || old < max) {
-                    textBox.setText(String.valueOf(old+1));
+                    textBox.setText(String.valueOf(old + 1));
                 }
             }
         });
@@ -78,7 +85,7 @@ class NumberBox extends FormWidget {
         });
         this.addView(textBox);
         this.addView(inc);
-        this.addView(decr);
+        this.addView(decr); //second param is layout params
     }
     public Integer getValue() {
         int ret = 0;

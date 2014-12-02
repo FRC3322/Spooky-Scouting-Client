@@ -27,11 +27,6 @@ public class MatchSummary extends Activity {
         Log.i("AOUT", values.toString());
         for(Tuple<String, Serializable> i: values) {
             arrayAdapter.add(i.x + ": " + i.y.toString());
-            arrayAdapter.add(i.x + ": " + i.y.toString());
-            arrayAdapter.add(i.x + ": " + i.y.toString());
-            arrayAdapter.add(i.x + ": " + i.y.toString());
-            arrayAdapter.add(i.x + ": " + i.y.toString());
-//            listView.addView(label);
         }
     }
 
