@@ -1,7 +1,5 @@
 package com.example.frc3322_04.scoutingclient;
 
-import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -15,9 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -27,16 +23,16 @@ public class BluetoothService {
     private BluetoothGatt m_BluetoothGatt;
     private boolean m_ServicesDiscoveredDelayed;
 
+    String beforeValue = null;
+    String afterValue = null;
 
     public static UUID CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static UUID NOTIFIABLE_GROUP_VALUES_UUID = UUID.fromString("5957BE8F-C01F-4531-A529-0924398E4FE9");
     private static UUID NOTIFIABLE_GROUP_UUID = UUID.fromString("B4A265CD-2786-432D-8E92-819B9113AA10");
-    public static UUID MASSAGE_LEVEL_UUID = UUID.fromString("25bfe8a4-786d-458d-a4ad-f710d4e7efc6");
-
+    public static UUID VENTILATION_LEVEL_UUID = UUID.fromString("165f7489-a805-4d70-8900-135a4e174404");
 
     private BluetoothGattCharacteristic m_NotifiableGroupValues;
     private BluetoothGattCharacteristic m_NotifiableGroup;
-
 
     public final static String ACTION_DEVICE_DISCOVERED = "org.skylinerobotics.ACTION_DEVICE_DISCOVERED";
     public final static String ACTION_GATT_CONNECTED = "org.skylinerobotics.ACTION_GATT_CONNECTED";
@@ -71,17 +67,25 @@ public class BluetoothService {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 for (BluetoothGattService service : m_BluetoothGatt.getServices()) {
                     for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                        Log.d("SPOOKY", String.format("found UUID %s", characteristic.getUuid().toString()));
+                        //if(characteristic.!= null){
+                     //       Log.d("SPOOKY" , characteristic.getUuid().toString());
+                       // }
+
+                        if(characteristic.getUuid().equals(VENTILATION_LEVEL_UUID)){
+                            readCharacteristic(characteristic);
+
+
+                        }
                         if (NOTIFIABLE_GROUP_VALUES_UUID.equals(characteristic.getUuid())) {
                             m_NotifiableGroupValues = characteristic;
                         }
                         else if (NOTIFIABLE_GROUP_UUID.equals(characteristic.getUuid())) {
                             m_NotifiableGroup = characteristic;
                             Log.d("Spooky","found things");
-                            m_NotifiableGroup.setValue("hi");
-                            m_BluetoothGatt.writeCharacteristic(m_NotifiableGroup);
+                            //m_NotifiableGroup.setValue("hi");
+                           // m_BluetoothGatt.writeCharacteristic(m_NotifiableGroup);
                         }
-                        if(MASSAGE_LEVEL_UUID.equals(characteristic.getUuid())){
+                        if(VENTILATION_LEVEL_UUID.equals(characteristic.getUuid())){
                             Log.d("SPOOKY", "FOUND THE MASSAGE");
                         }
                     }
@@ -99,6 +103,11 @@ public class BluetoothService {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                beforeValue = characteristic.getValue().toString();
+                characteristic.setValue("9");
+                afterValue = characteristic.getValue().toString();
+                Log.d("Spooky SCARY", afterValue + " " + beforeValue);
+                m_BluetoothGatt.writeCharacteristic(characteristic);
             }
         }
 
@@ -203,7 +212,7 @@ public class BluetoothService {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
                     Log.d("Spooky",String.format("Scan found %s,",device.getName()));
-                    if("BioFit-D".equals(device.getName())){
+                    if("FRC Scouting Hub".equals(device.getName())){
                         m_BluetoothGatt = device.connectGatt(activity,false, m_GattCallback);
                         stopDiscovery();
                     }
