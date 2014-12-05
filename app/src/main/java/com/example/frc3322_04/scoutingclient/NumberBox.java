@@ -21,8 +21,13 @@ class NumberBox extends FormWidget {
     Button inc, decr;
     int max, min;
     final boolean hMax, hMin;
-    NumberBox(Context context, String labelText, String keyValue, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum) {
+    public enum DisplayMode {
+        BUTTONS_ONLY, NUMBERPAD_ONLY, BOTH
+    }
+    DisplayMode displayMode;
+    NumberBox(Context context, String labelText, String keyValue, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum, DisplayMode mode) {
         super(context, labelText, keyValue);
+        displayMode = mode;
         hMax = hasMax;
         hMin = hasMin;
         max = maximum;
@@ -43,6 +48,14 @@ class NumberBox extends FormWidget {
         textBox.setText(String.valueOf(initialValue));
         DigitsKeyListener dkl = new DigitsKeyListener(min < 0, false);
         textBox.setKeyListener(dkl);
+        /*textBox.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+
+                }
+            }
+        });*/
         textBox.addTextChangedListener(new TextWatcher() {//make sure max and min rules are enforced
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -54,38 +67,45 @@ class NumberBox extends FormWidget {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (hMax && getValue() > max) {
+                if(textBox.getText().toString().isEmpty()) {
+                    return;
+                }else if (hMax && getValue() > max) {
                     textBox.setText(String.valueOf(max));
                 } else if (hMin && getValue() < min) {
                     textBox.setText(String.valueOf(min));
                 }
             }
         });
-        inc = new Button(context);
-        inc.setText("+");
-        inc.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int old = getValue();
-                if (!hMax || old < max) {
-                    textBox.setText(String.valueOf(old + 1));
-                }
-            }
-        });
-        decr = new Button(context);
-        decr.setText("-");
-        decr.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int old = getValue();
-                if (!hMin || old > min) {
-                    textBox.setText(String.valueOf(old - 1));
-                }
-            }
-        });
         this.addView(textBox);
-        this.addView(inc);
-        this.addView(decr); //second param is layout params
+        if(mode != DisplayMode.NUMBERPAD_ONLY) {
+            inc = new Button(context);
+            inc.setText("+");
+            inc.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int old = getValue();
+                    if (!hMax || old < max) {
+                        textBox.setText(String.valueOf(old + 1));
+                    }
+                }
+            });
+            decr = new Button(context);
+            decr.setText("-");
+            decr.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int old = getValue();
+                    if (!hMin || old > min) {
+                        textBox.setText(String.valueOf(old - 1));
+                    }
+                }
+            });
+            this.addView(inc);
+            this.addView(decr); //second param is layout params
+        }
+        if(mode != DisplayMode.NUMBERPAD_ONLY) {
+            inc.requestFocus();
+        }
     }
     public Integer getValue() {
         int ret = 0;
