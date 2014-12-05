@@ -29,10 +29,15 @@ public class BluetoothService {
     public static UUID CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static UUID NOTIFIABLE_GROUP_VALUES_UUID = UUID.fromString("5957BE8F-C01F-4531-A529-0924398E4FE9");
     private static UUID NOTIFIABLE_GROUP_UUID = UUID.fromString("B4A265CD-2786-432D-8E92-819B9113AA10");
-    public static UUID VENTILATION_LEVEL_UUID = UUID.fromString("165f7489-a805-4d70-8900-135a4e174404");
+    public static UUID VENTILATION_LEVEL_UUID = UUID.fromString("25BFE8A4-786D-458D-A4AD-F710D4E7EFC6");
+    public static UUID MASSAGE_SPEED_UUID   =   UUID.fromString("C4248837-F351-4538-9A73-8480637F3841");
+    public static UUID MASSAGE_INTENSITY_UUID = UUID.fromString("165F7489-A805-4D70-8900-135A4E174404");
 
     private BluetoothGattCharacteristic m_NotifiableGroupValues;
     private BluetoothGattCharacteristic m_NotifiableGroup;
+
+    String DataArrayList[] = {"1","2","3"};
+    int Datanumber = 0;
 
     public final static String ACTION_DEVICE_DISCOVERED = "org.skylinerobotics.ACTION_DEVICE_DISCOVERED";
     public final static String ACTION_GATT_CONNECTED = "org.skylinerobotics.ACTION_GATT_CONNECTED";
@@ -52,6 +57,7 @@ public class BluetoothService {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
+
             Log.d("Spooky","Connected to a device");
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
@@ -73,8 +79,15 @@ public class BluetoothService {
 
                         if(characteristic.getUuid().equals(VENTILATION_LEVEL_UUID)){
                             readCharacteristic(characteristic);
-
-
+                            Datanumber = 0;
+                        }
+                        if(characteristic.getUuid().equals(MASSAGE_INTENSITY_UUID)){
+                            readCharacteristic(characteristic);
+                            Datanumber = 1;
+                        }
+                        if(characteristic.getUuid().equals(MASSAGE_SPEED_UUID)){
+                            readCharacteristic(characteristic);
+                            Datanumber = 2;
                         }
                         if (NOTIFIABLE_GROUP_VALUES_UUID.equals(characteristic.getUuid())) {
                             m_NotifiableGroupValues = characteristic;
@@ -104,7 +117,7 @@ public class BluetoothService {
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 beforeValue = characteristic.getValue().toString();
-                characteristic.setValue("9");
+                characteristic.setValue(DataArrayList[Datanumber]);
                 afterValue = characteristic.getValue().toString();
                 Log.d("Spooky SCARY", afterValue + " " + beforeValue);
                 m_BluetoothGatt.writeCharacteristic(characteristic);
