@@ -3,7 +3,6 @@ package com.example.frc3322_04.scoutingclient;
 import android.content.Context;
 import android.util.Log;
 import android.widget.LinearLayout;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

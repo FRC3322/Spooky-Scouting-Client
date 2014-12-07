@@ -5,8 +5,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 class NumberBox extends FormWidget {
     //TODO make sure all the validation works
@@ -69,7 +72,9 @@ class NumberBox extends FormWidget {
         });
         this.addView(textBox);
         if(mode != DisplayMode.NUMBERPAD_ONLY) {
-            inc = new Button(context);
+            RelativeLayout container = new RelativeLayout(context);
+            LinearLayout buttonContainer = new LinearLayout(container.getContext());
+            inc = new Button(buttonContainer.getContext());
             inc.setText("+");
             inc.setOnClickListener(new OnClickListener() {
                 @Override
@@ -80,7 +85,7 @@ class NumberBox extends FormWidget {
                     }
                 }
             });
-            decr = new Button(context);
+            decr = new Button(buttonContainer.getContext());
             decr.setText("-");
             decr.setOnClickListener(new OnClickListener() {
                 @Override
@@ -91,8 +96,13 @@ class NumberBox extends FormWidget {
                     }
                 }
             });
-            this.addView(inc);
-            this.addView(decr); //second param is layout params
+            buttonContainer.addView(inc);
+            buttonContainer.addView(decr);
+            container.addView(buttonContainer);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)buttonContainer.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            container.setLayoutParams(params);
+            this.addView(container);
         }
         if(mode != DisplayMode.NUMBERPAD_ONLY) {
             inc.requestFocus();
