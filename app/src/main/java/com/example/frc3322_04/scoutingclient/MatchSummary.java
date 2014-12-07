@@ -7,11 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-
 
 public class MatchSummary extends Activity {
     ListView listView;
@@ -29,15 +26,12 @@ public class MatchSummary extends Activity {
             arrayAdapter.add(i.x + ": " + i.y.toString());
         }
     }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.match_summary, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

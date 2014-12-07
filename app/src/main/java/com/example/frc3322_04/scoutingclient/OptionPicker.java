@@ -3,7 +3,6 @@ package com.example.frc3322_04.scoutingclient;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import com.example.frc3322_04.scoutingclient.FormWidget;
 
 class OptionPicker extends FormWidget{
     Spinner spinner;

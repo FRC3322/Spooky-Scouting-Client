@@ -2,15 +2,11 @@ package com.example.frc3322_04.scoutingclient;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public class MapCordinatePicker extends FormWidget {
     //TODO sometimes part of hte image gets cut off

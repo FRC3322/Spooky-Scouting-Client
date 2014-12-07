@@ -4,16 +4,9 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
-import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
-import com.example.frc3322_04.scoutingclient.*;
 
 class NumberBox extends FormWidget {
     //TODO make sure all the validation works
@@ -60,11 +53,9 @@ class NumberBox extends FormWidget {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
                 if(textBox.getText().toString().isEmpty()) {

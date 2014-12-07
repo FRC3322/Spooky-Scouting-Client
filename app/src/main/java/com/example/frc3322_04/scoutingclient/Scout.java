@@ -9,8 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -110,7 +108,6 @@ public class Scout extends Activity {
         getMenuInflater().inflate(R.menu.scout, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -3,7 +3,6 @@ package com.example.frc3322_04.scoutingclient;
 import android.content.Context;
 import android.util.Log;
 import android.widget.EditText;
-import com.example.frc3322_04.scoutingclient.FormWidget;
 
 class TextBox extends FormWidget{
     EditText textBox;
