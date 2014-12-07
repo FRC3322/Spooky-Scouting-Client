@@ -10,7 +10,7 @@ import android.widget.Button;
 
 
 public class Main extends Activity {
-    Button scout_button;
+    Button scout_button, view_summary_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +20,14 @@ public class Main extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(),Scout.class);
+                startActivity(intent);
+            }
+        });
+        view_summary_button = (Button)findViewById(R.id.view_scouting_data);
+        view_summary_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(),ViewScoutingData.class);
                 startActivity(intent);
             }
         });

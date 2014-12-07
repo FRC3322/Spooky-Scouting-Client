@@ -24,6 +24,10 @@
             android:name=".MatchSummary"
             android:label="@string/title_activity_match_summary" >
         </activity>
+        <activity
+            android:name=".ViewScoutingData"
+            android:label="@string/title_activity_view_scouting_data" >
+        </activity>
     </application>
 
 </manifest>

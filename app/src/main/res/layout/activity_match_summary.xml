@@ -10,7 +10,14 @@
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/view_scouting_data"
         android:id="@+id/match_summary">
         </ListView>
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/view_scouting_data_button"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/view_scouting_data"/>
 </RelativeLayout>

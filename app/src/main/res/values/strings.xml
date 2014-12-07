@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_scout">Scout</string>
-    <string name="title_activity_match_summary">MatchSummary</string>
-
+    <string name="title_activity_match_summary">Match Summary</string>
+    <string name="title_activity_view_scouting_data">Scouting Data</string>
+    <string name="view_scouting_data_button">View Scouting Data</string>
 </resources>
