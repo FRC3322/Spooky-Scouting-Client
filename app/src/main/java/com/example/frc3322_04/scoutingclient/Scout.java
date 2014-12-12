@@ -51,7 +51,6 @@ public class Scout extends Activity {
         if(formPages.size() > 0)
             container.addView(formPages.get(0));
         currentPage = 0;
-        fixLabels();
     }
     private void fixLabels() {
         if(currentPage == 0) {

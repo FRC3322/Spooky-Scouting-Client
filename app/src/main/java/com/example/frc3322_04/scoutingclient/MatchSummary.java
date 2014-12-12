@@ -50,6 +50,7 @@ public class MatchSummary extends Activity {
         try {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(values);
+            objectOutputStream.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
