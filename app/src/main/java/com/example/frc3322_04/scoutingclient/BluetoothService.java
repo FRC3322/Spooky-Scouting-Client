@@ -39,6 +39,7 @@ public class BluetoothService {
     String DataArrayList[] = {"1","2","3"};
     int Datanumber = 0;
 
+
     public final static String ACTION_DEVICE_DISCOVERED = "org.skylinerobotics.ACTION_DEVICE_DISCOVERED";
     public final static String ACTION_GATT_CONNECTED = "org.skylinerobotics.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED = "org.skylinerobotics.ACTION_GATT_DISCONNECTED";
@@ -77,17 +78,14 @@ public class BluetoothService {
                      //       Log.d("SPOOKY" , characteristic.getUuid().toString());
                        // }
 
-                        if(characteristic.getUuid().equals(VENTILATION_LEVEL_UUID)){
+                        if(characteristic.getUuid().equals(VENTILATION_LEVEL_UUID) && Datanumber == 0){
                             readCharacteristic(characteristic);
-                            Datanumber = 0;
                         }
-                        if(characteristic.getUuid().equals(MASSAGE_INTENSITY_UUID)){
+                        if(characteristic.getUuid().equals(MASSAGE_INTENSITY_UUID) && Datanumber == 1){
                             readCharacteristic(characteristic);
-                            Datanumber = 1;
                         }
-                        if(characteristic.getUuid().equals(MASSAGE_SPEED_UUID)){
+                        if(characteristic.getUuid().equals(MASSAGE_SPEED_UUID) && Datanumber == 2){
                             readCharacteristic(characteristic);
-                            Datanumber = 2;
                         }
                         if (NOTIFIABLE_GROUP_VALUES_UUID.equals(characteristic.getUuid())) {
                             m_NotifiableGroupValues = characteristic;
@@ -121,6 +119,8 @@ public class BluetoothService {
                 afterValue = characteristic.getValue().toString();
                 Log.d("Spooky SCARY", afterValue + " " + beforeValue);
                 m_BluetoothGatt.writeCharacteristic(characteristic);
+                onCharacteristicWrite(m_BluetoothGatt, characteristic, 0);
+
             }
         }
 
@@ -135,6 +135,11 @@ public class BluetoothService {
             // The same problem happens with changing characteristic properties
             // such as notification status. See below for how the service delays
             // broadcasting service discovery until the descriptor write completes.
+            if(status == BluetoothGatt.GATT_SUCCESS){
+                startDiscovery();
+                Datanumber++;
+            }
+
         }
 
         @Override
