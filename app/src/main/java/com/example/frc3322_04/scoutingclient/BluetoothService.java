@@ -29,8 +29,8 @@ public class BluetoothService {
     public static UUID CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static UUID NOTIFIABLE_GROUP_VALUES_UUID = UUID.fromString("5957BE8F-C01F-4531-A529-0924398E4FE9");
     private static UUID NOTIFIABLE_GROUP_UUID = UUID.fromString("B4A265CD-2786-432D-8E92-819B9113AA10");
-    public static UUID VENTILATION_LEVEL_UUID = UUID.fromString("25BFE8A4-786D-458D-A4AD-F710D4E7EFC6");
-    public static UUID MASSAGE_SPEED_UUID   =   UUID.fromString("C4248837-F351-4538-9A73-8480637F3841");
+    public static UUID VENTILATION_LEVEL_UUID = UUID.fromString("EC7D0CB9-34D4-423C-AAAC-CFF722E3A6C5");
+    public static UUID MASSAGE_SPEED_UUID   =   UUID.fromString("E66E4070-831B-4E23-B05E-D7BE5F06AF4B");
     public static UUID MASSAGE_INTENSITY_UUID = UUID.fromString("165F7489-A805-4D70-8900-135A4E174404");
 
     private BluetoothGattCharacteristic m_NotifiableGroupValues;
@@ -136,7 +136,7 @@ public class BluetoothService {
             // such as notification status. See below for how the service delays
             // broadcasting service discovery until the descriptor write completes.
             if(status == BluetoothGatt.GATT_SUCCESS){
-                startDiscovery();
+                m_BluetoothGatt.discoverServices();
                 Datanumber++;
             }
 
