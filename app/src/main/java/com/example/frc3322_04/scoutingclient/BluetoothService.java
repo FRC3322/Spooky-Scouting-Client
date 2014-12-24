@@ -14,7 +14,10 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class BluetoothService {
@@ -32,13 +35,13 @@ public class BluetoothService {
     public static UUID VENTILATION_LEVEL_UUID = UUID.fromString("EC7D0CB9-34D4-423C-AAAC-CFF722E3A6C5");
     public static UUID MASSAGE_SPEED_UUID   =   UUID.fromString("E66E4070-831B-4E23-B05E-D7BE5F06AF4B");
     public static UUID MASSAGE_INTENSITY_UUID = UUID.fromString("165F7489-A805-4D70-8900-135A4E174404");
+    public static UUID CUSHION_EDGE_PRESSURE_UUID = UUID.fromString("65A45C5D-9B54-4488-ABD2-1853D11E7F54");
 
     private BluetoothGattCharacteristic m_NotifiableGroupValues;
     private BluetoothGattCharacteristic m_NotifiableGroup;
 
-    String DataArrayList[] = {"1","2","3"};
+    String DataArrayList[];
     int Datanumber = 0;
-
 
     public final static String ACTION_DEVICE_DISCOVERED = "org.skylinerobotics.ACTION_DEVICE_DISCOVERED";
     public final static String ACTION_GATT_CONNECTED = "org.skylinerobotics.ACTION_GATT_CONNECTED";
@@ -50,9 +53,10 @@ public class BluetoothService {
     public final static String CHARACTERISTIC = "org.skylinerobotics.CHARACTERISTIC";
     public final static String VALUE = "org.skylinerobotics.VALUE";
     public final static String TIME = "org.skylinerobotics.TIME";
-    public final Main activity;
-    public BluetoothService(Main activity){
+    public final MatchSummary activity;
+    public BluetoothService(MatchSummary activity, String[] Data){
         this.activity = activity;
+        DataArrayList = Data;
     }
     private final BluetoothGattCallback m_GattCallback = new BluetoothGattCallback() {
         @Override
@@ -71,6 +75,7 @@ public class BluetoothService {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 for (BluetoothGattService service : m_BluetoothGatt.getServices()) {
                     for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
@@ -84,21 +89,24 @@ public class BluetoothService {
                         if(characteristic.getUuid().equals(MASSAGE_INTENSITY_UUID) && Datanumber == 1){
                             readCharacteristic(characteristic);
                         }
-                        if(characteristic.getUuid().equals(MASSAGE_SPEED_UUID) && Datanumber == 2){
+                        if(characteristic.getUuid().equals(CUSHION_EDGE_PRESSURE_UUID) && Datanumber == 2){
                             readCharacteristic(characteristic);
                         }
-                        if (NOTIFIABLE_GROUP_VALUES_UUID.equals(characteristic.getUuid())) {
-                            m_NotifiableGroupValues = characteristic;
+                        if(characteristic.getUuid().equals(MASSAGE_SPEED_UUID) && Datanumber == 3){
+                            readCharacteristic(characteristic);
                         }
-                        else if (NOTIFIABLE_GROUP_UUID.equals(characteristic.getUuid())) {
-                            m_NotifiableGroup = characteristic;
-                            Log.d("Spooky","found things");
-                            //m_NotifiableGroup.setValue("hi");
-                           // m_BluetoothGatt.writeCharacteristic(m_NotifiableGroup);
-                        }
-                        if(VENTILATION_LEVEL_UUID.equals(characteristic.getUuid())){
-                            Log.d("SPOOKY", "FOUND THE MASSAGE");
-                        }
+//                        if (NOTIFIABLE_GROUP_VALUES_UUID.equals(characteristic.getUuid())) {
+//                            m_NotifiableGroupValues = characteristic;
+//                        }
+//                        else if (NOTIFIABLE_GROUP_UUID.equals(characteristic.getUuid())) {
+//                            m_NotifiableGroup = characteristic;
+//                            Log.d("Spooky","found things");
+//                            //m_NotifiableGroup.setValue("hi");
+//                           // m_BluetoothGatt.writeCharacteristic(m_NotifiableGroup);
+//                        }
+//                        if(VENTILATION_LEVEL_UUID.equals(characteristic.getUuid())){
+//                            Log.d("SPOOKY", "FOUND THE MASSAGE");
+//                        }
                     }
                 }
 
@@ -114,9 +122,7 @@ public class BluetoothService {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                beforeValue = characteristic.getValue().toString();
                 characteristic.setValue(DataArrayList[Datanumber]);
-                afterValue = characteristic.getValue().toString();
                 Log.d("Spooky SCARY", afterValue + " " + beforeValue);
                 m_BluetoothGatt.writeCharacteristic(characteristic);
                 onCharacteristicWrite(m_BluetoothGatt, characteristic, 0);
@@ -136,8 +142,8 @@ public class BluetoothService {
             // such as notification status. See below for how the service delays
             // broadcasting service discovery until the descriptor write completes.
             if(status == BluetoothGatt.GATT_SUCCESS){
-                m_BluetoothGatt.discoverServices();
                 Datanumber++;
+                m_BluetoothGatt.discoverServices();
             }
 
         }

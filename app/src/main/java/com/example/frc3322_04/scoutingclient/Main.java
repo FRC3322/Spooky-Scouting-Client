@@ -57,24 +57,14 @@ public class Main extends Activity {
 
        // Intent gattServiceIntent = new Intent(this, BluetoothService.class);
        // bindService(gattServiceIntent, m_ServiceConnection, BIND_AUTO_CREATE);
-        m_BluetoothService = new BluetoothService(this);
-        if (m_BluetoothService.initialize()) {
-            configureWithBluetooth();
-        }
-        else {
-        }
+
 
     }
 
     private final ServiceConnection m_ServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-            m_BluetoothService = ((BluetoothService.LocalBinder) service).getService();
-            if (m_BluetoothService.initialize()) {
-                configureWithBluetooth();
-            }
-            else {
-            }
+
         }
 
         @Override
@@ -120,7 +110,6 @@ public class Main extends Activity {
         super.onStop();
 
 //        unbindService(m_ServiceConnection);
-        m_BluetoothService = null;
     }
 
     @Override
@@ -128,37 +117,14 @@ public class Main extends Activity {
         super.onDestroy();
     }
 
-    private void enableBluetooth() {
-        if (m_BluetoothAdapter == null) {
-        }
-        else if (!m_BluetoothAdapter.isEnabled()) {
-            Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnOnIntent, 1);
-        }
-        else {
-        }
-    }
 
-    private void configureWithBluetooth() {
-        enableBluetooth();
-        discoverDevices();
-
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    public void discoverDevices() {
-        if (m_DiscoveringDevices) {
-            return;
-        }
-        else {
-            m_DiscoveringDevices = true;
-            m_BluetoothService.startDiscovery();
-        }
-    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
