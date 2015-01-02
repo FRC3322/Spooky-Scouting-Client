@@ -106,8 +106,8 @@ public class MatchSummary extends Activity {
         }
     }
     public void saveToFile(String fileName) {
-        File file = new File(this.getFilesDir(),fileName);
-        Log.e("file", this.getFilesDir().toString()+".txt");
+        File file = new File(this.getFilesDir(),fileName+".txt");
+        Log.e("file", this.getFilesDir().toString());
         ObjectOutputStream objectOutputStream;
         try {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));

@@ -1,15 +1,23 @@
 package com.example.frc3322_04.scoutingclient;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ViewScoutingData extends Activity {
@@ -23,13 +31,29 @@ public class ViewScoutingData extends Activity {
         int i = files.length;
         ArrayList<String> data = new ArrayList<String>();
         while(i > 0){
-            data.add(files[i-1].getName());
+            data.add(files[i-1].getName().replace(".txt",""));
             Log.e("Data", data.toString());
             i=i-1;
         }
+        final File directory = this.getFilesDir();
         listview = (ListView)findViewById(R.id.localDataListView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
         listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+                String item = ((TextView)view).getText().toString();
+
+                File file = new File(directory,item+".txt");
+                Intent i = new Intent();
+                i.setAction(android.content.Intent.ACTION_VIEW);
+                i.setDataAndType(Uri.fromFile(file), "text");
+                startActivity(i);
+            }
+        });
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
