@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class MatchSummary extends Activity {
     ListView listView;
-    Button view_summary_button;
+    Button view_summary_button, scout_a_new_match_button;
     ArrayAdapter<String> arrayAdapter;
     ArrayList<Tuple<String, Serializable> > values;
     private BluetoothService m_BluetoothService;
@@ -45,6 +45,7 @@ public class MatchSummary extends Activity {
         for(Tuple<String, Serializable> i: values) {
             arrayAdapter.add(i.x + ": " + i.y.toString());
         }
+        scout_a_new_match_button = (Button)findViewById(R.id.scout_button);
         view_summary_button = (Button)findViewById(R.id.view_scouting_data);
         view_summary_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +54,11 @@ public class MatchSummary extends Activity {
                 startActivity(intent);
             }
         });
-        saveToFile("match1");
+        saveToFile("match "+values.get(0).toString().replaceAll("[^0-9]", ""));
+    }
+    public void scoutNewMatch(View view){
+        Intent intent = new Intent(getBaseContext(),Scout.class);
+        startActivity(intent);
     }
     @Override
     protected void onStart(){
@@ -70,8 +75,6 @@ public class MatchSummary extends Activity {
         String t4 =  values.get(13).toString();
         String[] DataArrayList = {t1,t2,t3,t4};
         m_BluetoothService = new BluetoothService(this, DataArrayList);
-
-        Log.i("hi",values.get(1).toString());
         if (m_BluetoothService.initialize()) {
             configureWithBluetooth();
         }
@@ -104,10 +107,11 @@ public class MatchSummary extends Activity {
     }
     public void saveToFile(String fileName) {
         File file = new File(this.getFilesDir(),fileName);
+        Log.e("file", this.getFilesDir().toString()+".txt");
         ObjectOutputStream objectOutputStream;
         try {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
-            objectOutputStream.writeObject(values);
+            objectOutputStream.writeObject(values.toString());
             objectOutputStream.close();
         } catch(Exception e) {
             e.printStackTrace();

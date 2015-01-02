@@ -16,8 +16,19 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:text="@string/view_scouting_data_button"
+        android:id="@+id/view_scouting_data"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_alignTop="@+id/newScout"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scout Another Match"
+        android:id="@+id/newScout"
         android:layout_alignParentBottom="true"
-        android:id="@+id/view_scouting_data"/>
+        android:layout_alignParentEnd="true"
+        android:onClick="scoutNewMatch" />
 </RelativeLayout>

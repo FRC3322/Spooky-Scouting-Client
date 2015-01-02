@@ -21,7 +21,7 @@ class NumberBox extends FormWidget {
         BUTTONS_ONLY, NUMBERPAD_ONLY, BOTH
     }
     DisplayMode displayMode;
-    NumberBox(Context context, String labelText, String keyValue, int initialValue, boolean hasMax, boolean hasMin, int maximum, int minimum, DisplayMode mode) {
+    NumberBox(Context context, String labelText, String keyValue, int initialValue, boolean hasInit, boolean hasMax, boolean hasMin, int maximum, int minimum, DisplayMode mode) {
         super(context, labelText, keyValue);
         displayMode = mode;
         hMax = hasMax;
@@ -41,7 +41,9 @@ class NumberBox extends FormWidget {
             initialValue = max;
         }
         textBox = new EditText(context);
-        textBox.setText(String.valueOf(initialValue));
+        if(hasInit){
+         textBox.setText(String.valueOf(initialValue));
+        }
         DigitsKeyListener dkl = new DigitsKeyListener(min < 0, false);
         textBox.setKeyListener(dkl);
         /*textBox.setOnFocusChangeListener(new OnFocusChangeListener() {

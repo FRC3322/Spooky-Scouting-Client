@@ -11,14 +11,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:text="Scout"
-        android:id="@+id/scout_button"/>
+        android:id="@+id/scout_button"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="188dp" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:text="@string/view_scouting_data_button"
-        android:layout_below="@id/scout_button"
-        android:id="@+id/view_scouting_data"/>
+        android:id="@+id/view_scouting_data"
+        android:layout_below="@+id/scout_button"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
