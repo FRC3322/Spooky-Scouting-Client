@@ -48,6 +48,7 @@ public class ViewScoutingData extends Activity {
 
                 File file = new File(directory,item+".txt");
                 Intent i = new Intent();
+                ///causes app to crash
                 i.setAction(android.content.Intent.ACTION_VIEW);
                 i.setDataAndType(Uri.fromFile(file), "text");
                 startActivity(i);

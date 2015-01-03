@@ -54,6 +54,7 @@ public class Scout extends Activity {
         if(formPages.size() > 0)
             container.addView(formPages.get(0));
         currentPage = 0;
+        fixLabels();
     }
     private void fixLabels() {
         if(currentPage == 0) {
@@ -71,9 +72,6 @@ public class Scout extends Activity {
         formPages.get(currentPage).getValues();
     }
     public void next(View view) {
-        if(currentPage == 0){
-
-        }
         if(currentPage < formPages.size() - 1) {
             container.removeAllViews();
             currentPage++;
@@ -81,6 +79,7 @@ public class Scout extends Activity {
         }
         else {
             ArrayList<Tuple<String, Serializable> > values = new ArrayList<Tuple<String, Serializable> >();
+            //TODO get rid of requirement that form must be filled in
             boolean isFilled = true;
             for(FormPage page : formPages) {
                 if(!page.isFilled()) {
@@ -102,7 +101,7 @@ public class Scout extends Activity {
         fixLabels();
     }
     public void back(View view) {
-        getValues();
+        getValues();    //TODO what is this for?
         if(currentPage > 0) {
             container.removeAllViews();
             currentPage--;
@@ -112,15 +111,15 @@ public class Scout extends Activity {
     }
     @Override
     public void onBackPressed(){
-        getValues();
+        getValues();    //TODO what is this for?
         if(currentPage > 0) {
             container.removeAllViews();
             currentPage--;
             container.addView(formPages.get(currentPage));
             fixLabels();
-        }
-        else
+        } else {
             super.onBackPressed();
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

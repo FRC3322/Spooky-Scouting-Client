@@ -1,0 +1,4 @@
+-Back button showed when scout match activity is opened, but it does nothing
+-Message that is displayed at the beggining of scout match is too short
+-In ViewScouting data, tapping on a match causes app to crash
+-ViewScoutingData should open up MatchSummary rather than text document intent
