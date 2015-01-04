@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,33 +30,35 @@ public class ViewScoutingData extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_scouting_data);
         File[] files = this.getFilesDir().listFiles();
-        int i = files.length;
         ArrayList<String> data = new ArrayList<String>();
-        while(i > 0){
-            data.add(files[i-1].getName().replace(".txt",""));
-            Log.e("Data", data.toString());
-            i=i-1;
+        for(File f : files) {
+            Log.i("AOUT", f.getName());
+            data.add(f.getName().replace(".txt",""));
         }
         final File directory = this.getFilesDir();
+        Log.i("AOUT", directory.toString());
         listview = (ListView)findViewById(R.id.localDataListView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
         listview.setAdapter(adapter);
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String item = ((TextView)view).getText().toString();
-
-                File file = new File(directory,item+".txt");
-                Intent i = new Intent();
-                ///causes app to crash
-                i.setAction(android.content.Intent.ACTION_VIEW);
-                i.setDataAndType(Uri.fromFile(file), "text");
-                startActivity(i);
+                File file = new File(directory,item + ".txt");
+                ObjectInputStream objectInputStream;
+                String temp;
+                try {
+                    objectInputStream = new ObjectInputStream(new FileInputStream(file));
+                    temp = (String)objectInputStream.readObject();
+                    objectInputStream.close();
+                    Log.i("AOUT: form data ", temp);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                //TODO parse data into a ArrayList<Tuple<String, Serializable> > to send to MatchSummary
             }
         });
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

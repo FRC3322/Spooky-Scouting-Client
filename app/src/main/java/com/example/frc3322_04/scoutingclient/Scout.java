@@ -37,11 +37,11 @@ public class Scout extends Activity {
         p1.add(new NumberBox(p1.getContext(),"Match Number","matchNum",0,false,true,true,1000, 0, NumberBox.DisplayMode.NUMBERPAD_ONLY));
         String[] opts = {"red","blue"};
         p1.add(new OptionPicker(p1.getContext(),"Choose team color","Optpick",opts));
-        p1.add(new MapCordinatePicker(p1.getContext(),"autonPossition"));
+        p1.add(new MapCordinatePicker(p1.getContext(),"autonPosition"));
         p1.add(new CheckBox(p1.getContext(), "Auton move", "autonMove", false));
         formPages.add(p1);
         FormPage p2 = new FormPage(container.getContext());
-        p2.add(new NumberBox(p1.getContext(),"Possesion","possesion",0,true,false,true,100, 0, NumberBox.DisplayMode.BUTTONS_ONLY));
+        p2.add(new NumberBox(p1.getContext(),"Possession","possession",0,true,false,true,100, 0, NumberBox.DisplayMode.BUTTONS_ONLY));
         p2.add(new NumberBox(p1.getContext(),"Truss throw success","trussThrowSuccess",0,true,false,true,0, 0, NumberBox.DisplayMode.BUTTONS_ONLY));
         p2.add(new NumberBox(p1.getContext(),"Truss throw miss","trussThrowMiss",0,true,false,true,100, 0, NumberBox.DisplayMode.BUTTONS_ONLY));
         p2.add(new NumberBox(p1.getContext(),"Truss catch","trussCatch",0,true,false,true,100, 0, NumberBox.DisplayMode.BUTTONS_ONLY));

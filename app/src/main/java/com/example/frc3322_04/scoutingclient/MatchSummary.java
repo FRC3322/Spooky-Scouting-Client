@@ -63,12 +63,9 @@ public class MatchSummary extends Activity {
     @Override
     protected void onStart(){
         super.onStart();
-        //Log.i("MSG");
         BluetoothManager m_BluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         m_BluetoothAdapter = (m_BluetoothManager == null) ? null : m_BluetoothManager.getAdapter();
 
-        // Intent gattServiceIntent = new Intent(this, BluetoothService.class);
-        // bindService(gattServiceIntent, m_ServiceConnection, BIND_AUTO_CREATE);
         String t1 = values.get(0).toString() + values.get(1).toString() + values.get(2).toString() + values.get(3).toString();
         String t2 = values.get(4).toString() + values.get(5).toString() + values.get(6).toString() + values.get(7).toString() + values.get(8).toString();
         String t3 = values.get(9).toString() + values.get(10).toString() + values.get(11).toString() + values.get(12).toString();
@@ -106,8 +103,8 @@ public class MatchSummary extends Activity {
         }
     }
     public void saveToFile(String fileName) {
-        File file = new File(this.getFilesDir(),fileName+".txt");
-        Log.e("file", this.getFilesDir().toString());
+        File file = new File(this.getFilesDir(), fileName + ".txt");
+        Log.i("AOUT file", this.getFilesDir().toString());
         ObjectOutputStream objectOutputStream;
         try {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
