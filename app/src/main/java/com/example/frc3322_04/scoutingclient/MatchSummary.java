@@ -108,7 +108,7 @@ public class MatchSummary extends Activity {
         ObjectOutputStream objectOutputStream;
         try {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
-            objectOutputStream.writeObject(values.toString());
+            objectOutputStream.writeObject(values);
             objectOutputStream.close();
         } catch(Exception e) {
             e.printStackTrace();

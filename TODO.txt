@@ -1,4 +1,3 @@
 -Message that is displayed at the beggining of scout match is too short
--ViewScoutingData should open up MatchSummary rather than text document intent
 -Scout -> MatchSummary -> Scout new match -> and so on might make the stack
 	of activities unessicarily large

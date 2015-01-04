@@ -15,6 +15,7 @@ import android.widget.ListView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.widget.AdapterView.OnItemClickListener;
@@ -47,16 +48,20 @@ public class ViewScoutingData extends Activity {
                 String item = ((TextView)view).getText().toString();
                 File file = new File(directory,item + ".txt");
                 ObjectInputStream objectInputStream;
-                String temp;
+                ArrayList<Tuple<String, Serializable> > values;
                 try {
                     objectInputStream = new ObjectInputStream(new FileInputStream(file));
-                    temp = (String)objectInputStream.readObject();
+                    values = (ArrayList<Tuple<String, Serializable> >)objectInputStream.readObject();
                     objectInputStream.close();
-                    Log.i("AOUT: form data ", temp);
+                    Log.i("AOUT: form data ", values.toString());
                 } catch(Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(ViewScoutingData.this,"Could not open data file", Toast.LENGTH_LONG).show();
+                    return;
                 }
-                //TODO parse data into a ArrayList<Tuple<String, Serializable> > to send to MatchSummary
+                Intent intent = new Intent(getBaseContext(), MatchSummary.class);
+                intent.putExtra("FORM_CONTENTS", values);
+                startActivity(intent);
             }
         });
     }
