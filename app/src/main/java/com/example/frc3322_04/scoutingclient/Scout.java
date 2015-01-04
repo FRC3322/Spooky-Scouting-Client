@@ -1,6 +1,8 @@
 package com.example.frc3322_04.scoutingclient;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,8 @@ public class Scout extends Activity {
     int currentPage;
     Button back;
     Button next;
+    AlertDialog formNotFilledDialog;
+    boolean continueWithUnfilledForm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +38,7 @@ public class Scout extends Activity {
         String[] opts = {"red","blue"};
         p1.add(new OptionPicker(p1.getContext(),"Choose team color","Optpick",opts));
         p1.add(new MapCordinatePicker(p1.getContext(),"autonPossition"));
-        p1.add(new CheckBox(p1.getContext(),"Auton move","autonMove",false));
-        Toast.makeText(this,"Press the BACK key to hide the numpad and continue in the app!", Toast.LENGTH_SHORT).show();
+        p1.add(new CheckBox(p1.getContext(), "Auton move", "autonMove", false));
         formPages.add(p1);
         FormPage p2 = new FormPage(container.getContext());
         p2.add(new NumberBox(p1.getContext(),"Possesion","possesion",0,true,false,true,100, 0, NumberBox.DisplayMode.BUTTONS_ONLY));
@@ -51,9 +54,26 @@ public class Scout extends Activity {
         p3.add(new CheckBox(p3.getContext(),"Fail","fail",false));
         p3.add(new TextArea(p3.getContext(),"Notes","notes",null));
         formPages.add(p3);
+        AlertDialog.Builder formNotFilledBuilder = new AlertDialog.Builder(Scout.this);
+        formNotFilledBuilder.setTitle("Form not fully filled in").setMessage("Some form items are incomplete");
+        formNotFilledBuilder.setPositiveButton("Continue anyways", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                continueWithUnfilledForm = true;
+                next(next.getRootView());
+            }
+        });
+        formNotFilledBuilder.setNegativeButton("Finish form", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) { continueWithUnfilledForm = false;}
+        });
+        formNotFilledDialog = formNotFilledBuilder.create();
+        continueWithUnfilledForm = false;
         if(formPages.size() > 0)
             container.addView(formPages.get(0));
         currentPage = 0;
+        //this is annoying. LENGTH_SHORT does not give enought time to notice and read the message, but LENGTH_LONG takes too long and is annoying after the fix time
+        Toast.makeText(this,"Press the BACK key to hide the numpad and continue in the app!", Toast.LENGTH_SHORT).show();
         fixLabels();
     }
     private void fixLabels() {
@@ -69,10 +89,15 @@ public class Scout extends Activity {
         }
     }
     public void next(View view) {
+        if(!formPages.get(currentPage).isFilled() && !continueWithUnfilledForm) {
+            formNotFilledDialog.show(); //this is asyncronous (I think), so return imediately
+            return;
+        }
         if(currentPage < formPages.size() - 1) {
             container.removeAllViews();
             currentPage++;
             container.addView(formPages.get(currentPage));
+            continueWithUnfilledForm = false;
         }
         else {
             ArrayList<Tuple<String, Serializable> > values = new ArrayList<Tuple<String, Serializable> >();
