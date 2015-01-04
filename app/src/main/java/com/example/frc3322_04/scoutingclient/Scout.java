@@ -68,9 +68,6 @@ public class Scout extends Activity {
             next.setText("Next");
         }
     }
-    public void getValues() {
-        formPages.get(currentPage).getValues();
-    }
     public void next(View view) {
         if(currentPage < formPages.size() - 1) {
             container.removeAllViews();
@@ -79,29 +76,16 @@ public class Scout extends Activity {
         }
         else {
             ArrayList<Tuple<String, Serializable> > values = new ArrayList<Tuple<String, Serializable> >();
-            //TODO get rid of requirement that form must be filled in
-            boolean isFilled = true;
             for(FormPage page : formPages) {
-                if(!page.isFilled()) {
-                    isFilled = false;
-                    break;
-                }
                 values.addAll(page.getValues());
             }
-            if(isFilled) {
-                Intent intent = new Intent(getBaseContext(), MatchSummary.class);
-                intent.putExtra("FORM_CONTENTS", values);
-                startActivity(intent);
-            } else {
-                Log.i("AOUT","NOT FILLED IN");
-                Toast.makeText(getApplicationContext(),
-                        "You failed to enter in data for one or more fields!  Please double check your entries with the BACK button", Toast.LENGTH_LONG).show();
-            }
+            Intent intent = new Intent(getBaseContext(), MatchSummary.class);
+            intent.putExtra("FORM_CONTENTS", values);
+            startActivity(intent);
         }
         fixLabels();
     }
     public void back(View view) {
-        getValues();    //TODO what is this for?
         if(currentPage > 0) {
             container.removeAllViews();
             currentPage--;
@@ -111,7 +95,6 @@ public class Scout extends Activity {
     }
     @Override
     public void onBackPressed(){
-        getValues();    //TODO what is this for?
         if(currentPage > 0) {
             container.removeAllViews();
             currentPage--;
